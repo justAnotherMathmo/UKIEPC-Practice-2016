@@ -22,7 +22,7 @@ for x in range(n):
     for y in range(m):
         if grid[x][y] != 0:
             grid[x][y] = next(iterator)
-
+            
 ## Helper Functions:
 
 def stroke_items(x1, y1, x2, y2):
@@ -72,9 +72,11 @@ Result is the number of distinct integers in grid"""
             
     distinct_vals = set()
     for x in grid:
-        distinct_vals = distinct_vals.union(grid[x].values())
+        distinct_vals = distinct_vals.union(new_grid[x].values())
+    print(new_grid)
     return len(distinct_vals) - 1
 
+## Actual work
 
 for stroke_start_end in strokes:
     ## Updating stroke information
