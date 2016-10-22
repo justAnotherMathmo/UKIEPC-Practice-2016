@@ -11,7 +11,6 @@ for line in sys.stdin:
         strokes += [tuple(map(int, line.split(' ')))]
 
 grid = {row:[1 for col in range(m)] for j in range(n)}
-regions = 1
 
 ## Helper Functions:
 
@@ -26,11 +25,13 @@ def stroke_items(x1, y1, x2, y2):
             stroked += [(y1, x_index)]
     return stroked 
 
-for x1, y1, x2, y2 in strokes:
-    ## Adding stroke information
 
-
+for stroke_start_end in strokes:
+    ## Updating stroke information
+    stroke = stroke_items(stroke_start_end*)
+    for x, y in stroke:
+        grid[x][y] = 0
     
 
-def open_neigh(grid, x, y):
+def compute_regions(grid):
     pass
