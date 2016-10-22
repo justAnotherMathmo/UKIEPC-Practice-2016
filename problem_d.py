@@ -21,11 +21,13 @@ else:
             shares = 0
         elif prices[i-1] > prices[i] and prices[i] < prices[i+1] and prices[i] <= money:
             shares = int(money/prices[i])
+            if shares > 100000:
+                shares = 100000
             money -= shares*prices[i]
-
+        
     money += shares*prices[-1]
+    
 
-
-print(money)
+print(int(money))
     
     
