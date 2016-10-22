@@ -10,15 +10,16 @@ for line in sys.stdin:
     winloss = line
 
 for match in winloss:
-    if rank > 1:
+    if rank > 0:
         if match == "W":
             stars += 1
             winstreak += 1
             if winstreak >= 3 and rank > 5:
                 stars += 1
             if stars > rankstars[rank]:
-                rank -= 1
                 stars -= rankstars[rank]
+                rank -= 1
+                
         
         if match == "L":
             winstreak = 0
