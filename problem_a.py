@@ -4,6 +4,7 @@
 import sys
 
 from copy import deepcopy
+from itertools import count
 
 ## Set up:
 
@@ -17,7 +18,7 @@ for line in sys.stdin:
         strokes += [tuple(map(int, line.split(' ')))]
 
 grid = {i:{j:1 for j in range(m)} for i in range(n)}
-iterator = (i for i in range(1, m*n+1))
+iterator = count(start=1, step=1)
 for x in range(n):
     for y in range(m):
         if grid[x][y] != 0:
@@ -48,40 +49,45 @@ def neighbours(grid, x, y):
     return possible
 
 
-def compute_regions(base_grid):
+def compute_regions(base_grid, x1, y1, x2, y2):
     """Computes the number of regions by setting each unstroked square
 to be the next integer, then setting neighbours value to be the smallest one
 Result is the number of distinct integers in grid"""
-    new_grid = deepcopy(base_grid)
     updated = 1
     while updated == 1:
         updated = 0
         for x in range(n):
             for y in range(m):
-                local_val = new_grid[x][y]
+                local_val = base_grid[x][y]
+                if local_val == 0:
+                    continue
                 neigh_vals = tuple(
-                    new_grid[a][b] for a, b in neighbours(new_grid, x, y)
+                    base_grid[a][b] for a, b in neighbours(base_grid, x, y)
                     )
                 if neigh_vals == ():
                     continue
                 else:
-                    neigh_val = min(neigh_vals)
-                if local_val > neigh_val:
-                    new_grid[x][y] = neigh_val
+                    neigh_val = max(neigh_vals)
+                if local_val < neigh_val:
+                    base_grid[x][y] = neigh_val
                     updated = 1
             
     distinct_vals = set()
     for x in grid:
-        distinct_vals = distinct_vals.union(new_grid[x].values())
-    print(new_grid, '\n')
+        distinct_vals = distinct_vals.union(base_grid[x].values())
     return len(distinct_vals) - 1
 
 ## Actual work
 
-for stroke_start_end in strokes:
+for x1, y1, x2, y2 in strokes:
     ## Updating stroke information
-    stroke = stroke_items(*stroke_start_end)
+    stroke = stroke_items(x1, y1, x2, y2)
     for x, y in stroke:
         grid[x][y] = 0
-
-    print(compute_regions(grid))
+    
+    for x in range(max(x1-2, 0), min(x2+1, n)): 
+        for y in range(max(y1-2, 0), min(y2+1, m)):
+            if grid[x][y] != 0:
+                grid[x][y] = next(iterator)
+            
+    print(compute_regions(grid, x1, y1, x2, y2))
