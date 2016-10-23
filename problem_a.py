@@ -29,11 +29,11 @@ def stroke_items(x1, y1, x2, y2):
     """Generate the stroke iterator"""
     stroked = []
     if x1==x2:
-        for y_index in range(y1-1,y2):
-            stroked += [(x1, y_index)]
+        for y_index in range(y1-1, y2):
+            stroked += [(x1-1, y_index)]
     else:  ## y1=y2 here
-        for x_index in range(x1-1,x2):
-            stroked += [(x_index, y1)]
+        for x_index in range(x1-1, x2):
+            stroked += [(x_index, y1-1)]
     return stroked
 
 
@@ -41,9 +41,9 @@ def neighbours(grid, x, y):
     """Checks the valid neighbours of (x,y)"""
     possible = [(x+1, y), (x-1, y), (x, y-1), (x, y+1)]
     for pos in possible[:]:
-        if -1 in pos or pos[0] >= m or pos[1] >= n:
+        if -1 in pos or pos[0] >= n or pos[1] >= m:
             possible.remove(pos)
-        elif grid[pos[1]][pos[0]] == 0:
+        elif grid[pos[0]][pos[1]] == 0:
             possible.remove(pos)
     return possible
 
@@ -60,7 +60,7 @@ Result is the number of distinct integers in grid"""
             for y in range(m):
                 local_val = new_grid[x][y]
                 neigh_vals = tuple(
-                    new_grid[b][a] for a, b in neighbours(new_grid, x, y)
+                    new_grid[a][b] for a, b in neighbours(new_grid, x, y)
                     )
                 if neigh_vals == ():
                     continue
@@ -73,7 +73,7 @@ Result is the number of distinct integers in grid"""
     distinct_vals = set()
     for x in grid:
         distinct_vals = distinct_vals.union(new_grid[x].values())
-    print(new_grid)
+    print(new_grid, '\n')
     return len(distinct_vals) - 1
 
 ## Actual work
